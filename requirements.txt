@@ -1,5 +1,7 @@
+chainlit
+python-dotenv
+logging
 azure-ai-agents
 azure-identity
 azure-ai-projects
-chainlit
-logging
+

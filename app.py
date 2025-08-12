@@ -15,7 +15,7 @@ logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(l
 # Retrieve Azure AI Project connection details from environment variables
 # AIPROJECT_ENDPOINT = os.getenv("AIPROJECT_ENDPOINT")
 # AIPROJECT_PROJECT_NAME = os.getenv("AIPROJECT_PROJECT_NAME")
-AGENT_ID = os.getenv("AGENT_ID")
+# AGENT_ID = os.getenv("AGENT_ID")
 
 # Initialize the Azure AI Project client
 project = AIProjectClient(
@@ -36,7 +36,7 @@ async def on_chat_start():
         thread = project.agents.threads.create()
         cl.user_session.set("thread_id", thread.id)
         await cl.Message(
-            content=f"Welcome! Chat with your AI Agent (Agent ID: {AGENT_ID})!",
+            content=f"Welcome! Chat with your AI Agent (Agent Name: {agent.name})!",
             author="System"
         ).send()
 

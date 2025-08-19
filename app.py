@@ -1,33 +1,42 @@
 import os
 import chainlit as cl
 import logging
-from dotenv import load_dotenv  # For loading environment variables
+from dotenv import find_dotenv,load_dotenv  # For loading environment variables
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 from azure.ai.agents.models import ListSortOrder
 
 # Load environment variables from a .env file (for connection string and agent ID)
-# load_dotenv() 
+
+# Set environment file
+dotenv_path = find_dotenv()
+load_dotenv(dotenv_path)
 
 # Disable verbose connection logs for cleaner output
 logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
 
 # Retrieve Azure AI Project connection details from environment variables
+# os.environ["AIPROJECT_ENDPOINT"] = os.getenv("AIPROJECT_ENDPOINT")
+# os.environ['AGENT_ID'] = os.getenv("AGENT_ID")
+
 # AIPROJECT_ENDPOINT = os.getenv("AIPROJECT_ENDPOINT")
-# AIPROJECT_PROJECT_NAME = os.getenv("AIPROJECT_PROJECT_NAME")
-# AGENT_ID = os.getenv("AGENT_ID")
+AIPROJECT_PROJECT_NAME = os.getenv("AIPROJECT_ENDPOINT")
+AGENT_ID = os.getenv("AGENT_ID")
+
+print(AIPROJECT_PROJECT_NAME)
+print(AGENT_ID)
 
 # Initialize the Azure AI Project client
 project = AIProjectClient(
     credential=DefaultAzureCredential(),
-    endpoint="https://ajay-kush-ai-project-resource.services.ai.azure.com/api/projects/ajay_kush_ai_project")
+    endpoint=AIPROJECT_PROJECT_NAME)
 
 
 # Chainlit setup - this decorator marks the function to be executed when a new chat session starts
 @cl.on_chat_start
 async def on_chat_start():
     # Retrieve agent using the stored ID
-    agent = project.agents.get_agent("asst_QqiBHle0Anlh93ycpIIiTpb8")
+    agent = project.agents.get_agent(AGENT_ID)
 
     # Store agent and create a new thread for the chat session if not already done
     if not cl.user_session.get("agent"):
